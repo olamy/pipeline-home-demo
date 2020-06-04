@@ -1,9 +1,10 @@
 // vars/performanceMemory.groovy
-def call(mode) {
+def call(m) {
 
     import java.lang.management.ManagementFactory
     def timestamp
     def masterPid
+    def mode = ${m}
     pipeline {   
         agent {
             label "master"
@@ -35,6 +36,7 @@ def call(mode) {
                             }
                         stage("VM Heap Dump"){
                             steps{
+                                echo "Running mode ${mode}"
                                 dir ("memory/VM_HeapDump"){
                                     // Option 1 (recommended)
                                     // sh """
