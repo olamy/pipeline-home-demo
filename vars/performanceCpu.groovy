@@ -1,9 +1,10 @@
 // vars/performanceCpu.groovy
-def call(mode) {
+def call(m) {
 
     import java.lang.management.ManagementFactory
     def timestamp
     def masterPid
+    def mode = ${m}
 
     pipeline {
     agent {
