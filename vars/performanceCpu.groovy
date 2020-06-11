@@ -36,29 +36,36 @@ def call(m) {
                             }
                         }
                     stage("VM Threads"){
-                        environment {
-                            // For option 2
-                            FREQUENCY = 100
-                            RUNS = 2
-                        }  
-                        steps{
-                            echo "Running mode ${mode}"
-                            dir ("cpu/Threads"){
-                                // Option 1 (recommended)
-                                sh """
-                                curl https://s3.amazonaws.com/cloudbees-jenkins-scripts/e206a5-linux/jenkinshangWithJstack.sh > jenkinshangWithJstack.sh
-                                chmod +x jenkinshangWithJstack.sh
-                                ./jenkinshangWithJstack.sh $masterPid
-                                """
-                                // Option 2 
-                                // script {
-                                //     for (int i = 0; i < "$RUNS".toInteger() ; i++) {
-                                //         sh(script: "jcmd $masterPid Thread.print > jcmd-Thread${i}.txt", returnStdout: false)
-                                //         // sh(script: "jstack -l $masterPid > jstack${i}.txt", returnStdout: false)
-                                //         sleep "$FREQUENCY"
-                                //     }
-                                // }
+                        stages { 
+                            stage("jenkinshangWithJstack.sh") {
+                                // Ref: https://support.cloudbees.com/hc/en-us/articles/229370407
+                                when {
+                                    expression { mode == "1" }
+                                }
+                                steps {
+                                    sh """
+                                    curl https://s3.amazonaws.com/cloudbees-jenkins-scripts/e206a5-linux/jenkinshangWithJstack.sh > jenkinshangWithJstack.sh
+                                    chmod +x jenkinshangWithJstack.sh
+                                    ./jenkinshangWithJstack.sh $masterPid
+                                    """
+                                }
                             }
+                            stage("jcmd Thread.print") {
+                                // Ref: https://support.cloudbees.com/hc/en-us/articles/205199280
+                                when {
+                                    expression { mode == "2" }
+                                }
+                                environment {
+                                    FREQUENCY = 100
+                                    RUNS = 2
+                                }  
+                                script {
+                                    for (int i = 0; i < "$RUNS".toInteger() ; i++) {
+                                        sh(script: "jcmd $masterPid Thread.print > jcmd-Thread${i}.txt", returnStdout: false)
+                                        sleep "$FREQUENCY"
+                                    }
+                                }
+                            }             
                         }
                     }
                 }
