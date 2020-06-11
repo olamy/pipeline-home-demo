@@ -35,21 +35,31 @@ def call(m) {
                                 }
                             }
                         stage("VM Heap Dump"){
-                            steps{
-                                sh "dmesg -T > dmseg.txt"
-                                echo "Running mode ${mode}"
-                                dir ("memory/VM_HeapDump"){
-                                    // Option 1 (recommended)
-                                    // sh """
-                                    // curl https://s3.amazonaws.com/cloudbees-jenkins-scripts/e206a5-linux/jenkinsjmap.sh > jenkinsjmap.sh
-                                    // chmod +x jenkinsjmap.sh
-                                    // ./jenkinsjmap.sh $masterPid 1
-                                    // """
-                                    // Option 2
-                                    // Heap Dump
-                                    sh "jmap -dump:format=b,file=heap_dump.hprof $masterPid" 
-                                    // Class Histogram (Classes taking the most memory are listed at the top, and classes are listed in a descending order)
-                                    sh "jcmd $masterPid GC.class_histogram > class_histogram.txt"
+                            stages {
+                                stage("jenkinsjmap.sh") {
+                                    // Ref: https://support.cloudbees.com/hc/en-us/articles/115001122568
+                                    when {
+                                        expression { mode == "1" }
+                                    }
+                                    steps {
+                                        sh """
+                                        curl https://s3.amazonaws.com/cloudbees-jenkins-scripts/e206a5-linux/jenkinsjmap.sh > jenkinsjmap.sh
+                                        chmod +x jenkinsjmap.sh
+                                        ./jenkinsjmap.sh $masterPid 1
+                                        """
+                                    }
+                                }
+                                stage("jmap") {
+                                    // Ref: https://support.cloudbees.com/hc/en-us/articles/222167128
+                                    when {
+                                        expression { mode == "2" }
+                                    }
+                                    script {
+                                        // Heap Dump
+                                        sh "jmap -dump:format=b,file=heap_dump.hprof $masterPid" 
+                                        // Class Histogram (Classes taking the most memory are listed at the top, and classes are listed in a descending order)
+                                        sh "jcmd $masterPid GC.class_histogram > class_histogram.txt"
+                                    }
                                 }
                             }
                         }
