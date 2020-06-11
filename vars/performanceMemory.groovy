@@ -36,6 +36,7 @@ def call(m) {
                             }
                         stage("VM Heap Dump"){
                             steps{
+                                sh "dmesg -T > dmseg.txt"
                                 echo "Running mode ${mode}"
                                 dir ("memory/VM_HeapDump"){
                                     // Option 1 (recommended)

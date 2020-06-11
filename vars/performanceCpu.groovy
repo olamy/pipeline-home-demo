@@ -25,7 +25,7 @@ def call(m) {
                 stages {
                     stage("VM Description"){
                         steps{
-                            dir ("cpu/VM_Description"){
+                            dir ("cpu"){
                                 sh "echo 'VM.version \n ==========' > VM_description.txt"
                                 sh "jcmd $masterPid VM.version >> VM_description.txt"
                                 sh "echo 'VM.system_properties \n ==========' >> VM_description.txt"
@@ -43,7 +43,7 @@ def call(m) {
                         }  
                         steps{
                             echo "Running mode ${mode}"
-                            dir ("cpu/VM_Threads"){
+                            dir ("cpu/Threads"){
                                 // Option 1 (recommended)
                                 sh """
                                 curl https://s3.amazonaws.com/cloudbees-jenkins-scripts/e206a5-linux/jenkinshangWithJstack.sh > jenkinshangWithJstack.sh
