@@ -60,14 +60,16 @@ def call(m) {
                                 environment {
                                     FREQUENCY = 100
                                     RUNS = 2
-                                }  
-                                script {
-                                    for (int i = 0; i < "$RUNS".toInteger() ; i++) {
-                                        sh(script: "jcmd $masterPid Thread.print > jcmd-Thread${i}.txt", returnStdout: false)
-                                        sleep "$FREQUENCY"
+                                }
+                                steps {
+                                    script {
+                                        for (int i = 0; i < "$RUNS".toInteger() ; i++) {
+                                            sh(script: "jcmd $masterPid Thread.print > jcmd-Thread${i}.txt", returnStdout: false)
+                                            sleep "$FREQUENCY"
+                                        }
                                     }
                                 }
-                            }             
+                            }
                         }
                     }
                 }
