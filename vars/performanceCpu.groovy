@@ -28,16 +28,18 @@ def call(mode) {
             stage("Collect data") {
                 stages {
                     stage("VM Description"){
+                        environment {
+                            OUTPUT = "VM_description.txt"
+                        }
                         steps{
                             dir ("cpu"){
                                 sh """
-                                    output=VM_description.txt
-                                    echo '==========\nVM.version\n==========\n\n' >> $output
-                                    jcmd $masterPid VM.version >> $output
-                                    echo '==========\nVM.system_properties\n==========\n\n' >> $output
-                                    jcmd $masterPid VM.system_properties >> $output
-                                    echo '==========\nVM.flags\n==========\n\n' >> $output
-                                    jcmd $masterPid VM.flags >> $output
+                                    echo '==========\nVM.version\n==========\n\n' >> $OUTPUT
+                                    jcmd $masterPid VM.version >> $OUTPUT
+                                    echo '==========\nVM.system_properties\n==========\n\n' >> $OUTPUT
+                                    jcmd $masterPid VM.system_properties >> $OUTPUT
+                                    echo '==========\nVM.flags\n==========\n\n' >> $OUTPUT
+                                    jcmd $masterPid VM.flags >> $OUTPUT
                                 """
                                 }
                             }
