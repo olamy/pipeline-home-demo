@@ -62,10 +62,12 @@ def call(m) {
                                     RUNS = 2
                                 }
                                 steps {
-                                    script {
-                                        for (int i = 0; i < "$RUNS".toInteger() ; i++) {
-                                            sh(script: "jcmd $masterPid Thread.print > jcmd-Thread${i}.txt", returnStdout: false)
-                                            sleep "$FREQUENCY"
+                                    dir ("cpu/VM_Threads"){
+                                        script {
+                                            for (int i = 0; i < "$RUNS".toInteger() ; i++) {
+                                                sh(script: "jcmd $masterPid Thread.print > jcmd-Thread${i}.txt", returnStdout: false)
+                                                sleep "$FREQUENCY"
+                                            }
                                         }
                                     }
                                 }
