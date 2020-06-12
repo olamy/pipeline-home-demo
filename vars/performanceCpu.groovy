@@ -30,12 +30,20 @@ def call(mode) {
                     stage("VM Description"){
                         steps{
                             dir ("cpu"){
-                                sh "echo 'VM.version \n ==========' > VM_description.txt"
-                                sh "jcmd $masterPid VM.version >> VM_description.txt"
-                                sh "echo 'VM.system_properties \n ==========' >> VM_description.txt"
-                                sh "jcmd $masterPid VM.system_properties >> VM_description.txt"
-                                sh "echo 'VM.flags \n ==========' >> VM_description.txt"
-                                sh "jcmd $masterPid VM.flags >> VM_description.txt"
+                                sh """
+                                cat <<EOF >>VM_description.txt
+                                VM.version
+                                ===========
+                                $(jcmd $masterPid VM.version)
+                                EOF
+                                """
+                                // sh "echo 'VM.version' > VM_description.txt"
+                                // sh "echo 'VM.version \n ==========' > VM_description.txt"
+                                // sh "jcmd $masterPid VM.version >> VM_description.txt"
+                                // sh "echo 'VM.system_properties \n ==========' >> VM_description.txt"
+                                // sh "jcmd $masterPid VM.system_properties >> VM_description.txt"
+                                // sh "echo 'VM.flags \n ==========' >> VM_description.txt"
+                                // sh "jcmd $masterPid VM.flags >> VM_description.txt"
                                 }
                             }
                         }
