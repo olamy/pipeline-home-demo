@@ -60,8 +60,8 @@ def call(mode) {
                                             """
                                         }
                                     }
-                                }
-                                stage("jcmd") {
+                                }y
+                                stage("jmap") {
                                     // Ref: https://support.cloudbees.com/hc/en-us/articles/222167128
                                     when {
                                         environment name: 'MODE', value: '2'
@@ -73,8 +73,9 @@ def call(mode) {
                                     steps{
                                         dir ("memory"){
                                             script {
+                                                // jcmd $masterPid GC.heap_dump filename=$OUTPUT_HEAPDUMP > Permission issue
                                                 sh """
-                                                jcmd $masterPid GC.heap_dump filename=$OUTPUT_HEAPDUMP
+                                                jmap -dump:format=b,file=$OUTPUT_HEAPDUMP $masterPid
                                                 jcmd $masterPid GC.class_histogram > $OUTPUT_HISTOGRAM
                                                 """
                                             }
