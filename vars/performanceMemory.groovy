@@ -54,9 +54,9 @@ def call(mode) {
                                     steps {
                                         dir ("memory"){
                                             sh """
-                                            curl https://s3.amazonaws.com/cloudbees-jenkins-scripts/e206a5-linux/jenkinsjmap.sh > jenkinsjmap.sh
-                                            chmod +x jenkinsjmap.sh
-                                            ./jenkinsjmap.sh $masterPid 1
+                                            curl https://cloudbees-jenkins-scripts.s3.amazonaws.com/e206a5-linux/jenkinsmemory.sh > jenkinsmemory.sh
+                                            chmod +x jenkinsmemory.sh
+                                            ./jenkinsmemory.sh $masterPid 1
                                             """
                                         }
                                     }
