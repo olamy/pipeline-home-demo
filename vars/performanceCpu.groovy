@@ -1,7 +1,9 @@
 // vars/performanceCpu.groovy
+
+import java.lang.management.ManagementFactory
+
 def call(m) {
 
-    import java.lang.management.ManagementFactory
     def timestamp
     def masterPid
     def mode = ${m}
