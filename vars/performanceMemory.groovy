@@ -60,7 +60,7 @@ def call(mode) {
                                             """
                                         }
                                     }
-                                }y
+                                }
                                 stage("jmap") {
                                     // Ref: https://support.cloudbees.com/hc/en-us/articles/222167128
                                     when {
