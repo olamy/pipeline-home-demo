@@ -47,11 +47,13 @@ def call(mode) {
                                     environment name: 'MODE', value: '1'
                                 }
                                 steps {
-                                    sh """
-                                    curl https://s3.amazonaws.com/cloudbees-jenkins-scripts/e206a5-linux/jenkinshangWithJstack.sh > jenkinshangWithJstack.sh
-                                    chmod +x jenkinshangWithJstack.sh
-                                    ./jenkinshangWithJstack.sh $masterPid
-                                    """
+                                    dir ("cpu"){
+                                        sh """
+                                        curl https://s3.amazonaws.com/cloudbees-jenkins-scripts/e206a5-linux/jenkinshangWithJstack.sh > jenkinshangWithJstack.sh
+                                        chmod +x jenkinshangWithJstack.sh
+                                        ./jenkinshangWithJstack.sh $masterPid
+                                        """
+                                    }
                                 }
                             }
                             stage("jcmd Thread.print") {
