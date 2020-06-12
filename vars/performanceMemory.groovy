@@ -1,13 +1,18 @@
 // vars/performanceMemory.groovy
-def call(m) {
 
-    import java.lang.management.ManagementFactory
+import java.lang.management.ManagementFactory
+
+def call(mode) {
+
     def timestamp
     def masterPid
-    def mode = ${m}
+
     pipeline {   
         agent {
             label "master"
+        }
+        environment {
+            MODE = "${mode}"
         }
         stages {
                 stage("Prepare") {
@@ -23,14 +28,19 @@ def call(m) {
                 stage("Collect data") {
                     stages {
                         stage("VM Description"){
+                            environment {
+                                OUTPUT = "VM_description.txt"
+                            }
                             steps{
-                                dir ("memory/VM_Description"){
-                                    sh "echo 'VM.version \n ==========' > VM_description.txt"
-                                    sh "jcmd $masterPid VM.version >> VM_description.txt"
-                                    sh "echo 'VM.system_properties \n ==========' >> VM_description.txt"
-                                    sh "jcmd $masterPid VM.system_properties >> VM_description.txt"
-                                    sh "echo 'VM.flags \n ==========' >> VM_description.txt"
-                                    sh "jcmd $masterPid VM.flags >> VM_description.txt"
+                                dir ("memory"){
+                                    sh """
+                                    echo '==========\nVM.version\n==========\n\n' >> $OUTPUT
+                                    jcmd $masterPid VM.version >> $OUTPUT
+                                    echo '==========\nVM.system_properties\n==========\n\n' >> $OUTPUT
+                                    jcmd $masterPid VM.system_properties >> $OUTPUT
+                                    echo '==========\nVM.flags\n==========\n\n' >> $OUTPUT
+                                    jcmd $masterPid VM.flags >> $OUTPUT
+                                    """
                                     }
                                 }
                             }
@@ -39,7 +49,7 @@ def call(m) {
                                 stage("jenkinsjmap.sh") {
                                     // Ref: https://support.cloudbees.com/hc/en-us/articles/115001122568
                                     when {
-                                        expression { mode == "1" }
+                                        environment name: 'MODE', value: '1'
                                     }
                                     steps {
                                         sh """
@@ -52,7 +62,7 @@ def call(m) {
                                 stage("jmap") {
                                     // Ref: https://support.cloudbees.com/hc/en-us/articles/222167128
                                     when {
-                                        expression { mode == "2" }
+                                        environment name: 'MODE', value: '2'
                                     }
                                     script {
                                         // Heap Dump

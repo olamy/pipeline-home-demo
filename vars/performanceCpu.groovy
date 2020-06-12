@@ -67,8 +67,8 @@ def call(mode) {
                                     environment name: 'MODE', value: '2'
                                 }
                                 environment {
-                                    FREQUENCY = 100
-                                    RUNS = 2
+                                    FREQUENCY = 30
+                                    RUNS = 8
                                 }
                                 steps {
                                     dir ("cpu/VM_Threads"){
