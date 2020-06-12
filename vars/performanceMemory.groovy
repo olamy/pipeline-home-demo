@@ -52,14 +52,16 @@ def call(mode) {
                                         environment name: 'MODE', value: '1'
                                     }
                                     steps {
-                                        sh """
-                                        curl https://s3.amazonaws.com/cloudbees-jenkins-scripts/e206a5-linux/jenkinsjmap.sh > jenkinsjmap.sh
-                                        chmod +x jenkinsjmap.sh
-                                        ./jenkinsjmap.sh $masterPid 1
-                                        """
+                                        dir ("memory"){
+                                            sh """
+                                            curl https://s3.amazonaws.com/cloudbees-jenkins-scripts/e206a5-linux/jenkinsjmap.sh > jenkinsjmap.sh
+                                            chmod +x jenkinsjmap.sh
+                                            ./jenkinsjmap.sh $masterPid 1
+                                            """
+                                        }
                                     }
                                 }
-                                stage("jmap") {
+                                stage("jcmd") {
                                     // Ref: https://support.cloudbees.com/hc/en-us/articles/222167128
                                     when {
                                         environment name: 'MODE', value: '2'
@@ -69,11 +71,13 @@ def call(mode) {
                                         OUTPUT_HISTOGRAM = "class_histogram.txt"
                                     }
                                     steps{
-                                        script {
-                                            sh """
-                                            jcmd $masterPid GC.heap_dump filename=$OUTPUT_HEAPDUMP
-                                            jcmd $masterPid GC.class_histogram > $OUTPUT_HISTOGRAM
-                                            """
+                                        dir ("memory"){
+                                            script {
+                                                sh """
+                                                jcmd $masterPid GC.heap_dump filename=$OUTPUT_HEAPDUMP
+                                                jcmd $masterPid GC.class_histogram > $OUTPUT_HISTOGRAM
+                                                """
+                                            }
                                         }
                                     }
                                 }
