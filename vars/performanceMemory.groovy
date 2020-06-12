@@ -54,6 +54,7 @@ def call(mode) {
                                     steps {
                                         dir ("memory"){
                                             sh """
+                                            export JENKINS_JMAP_OUTPUT_DIR=$(pwd)
                                             curl https://cloudbees-jenkins-scripts.s3.amazonaws.com/e206a5-linux/jenkinsmemory.sh > jenkinsmemory.sh
                                             chmod +x jenkinsmemory.sh
                                             ./jenkinsmemory.sh $masterPid 1
