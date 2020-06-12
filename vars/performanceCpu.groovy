@@ -2,17 +2,19 @@
 
 import java.lang.management.ManagementFactory
 
-def call(m) {
+def call(mode) {
 
     def timestamp
     def masterPid
-    def mode = ${m}
 
     pipeline {
-    agent {
+        agent {
             label "master"
-    }
-    stages {
+        }
+        environment {
+            MODE = "${mode}"
+        }
+        stages {
             stage("Prepare") {
                 steps {
                     deleteDir()
@@ -42,7 +44,7 @@ def call(m) {
                             stage("jenkinshangWithJstack.sh") {
                                 // Ref: https://support.cloudbees.com/hc/en-us/articles/229370407
                                 when {
-                                    expression { mode == "1" }
+                                    environment name: 'MODE', value: '1'
                                 }
                                 steps {
                                     sh """
@@ -55,7 +57,7 @@ def call(m) {
                             stage("jcmd Thread.print") {
                                 // Ref: https://support.cloudbees.com/hc/en-us/articles/205199280
                                 when {
-                                    expression { mode == "2" }
+                                    environment name: 'MODE', value: '2'
                                 }
                                 environment {
                                     FREQUENCY = 100
