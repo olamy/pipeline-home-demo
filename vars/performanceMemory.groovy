@@ -64,11 +64,17 @@ def call(mode) {
                                     when {
                                         environment name: 'MODE', value: '2'
                                     }
-                                    script {
-                                        // Heap Dump
-                                        sh "jmap -dump:format=b,file=heap_dump.hprof $masterPid" 
-                                        // Class Histogram (Classes taking the most memory are listed at the top, and classes are listed in a descending order)
-                                        sh "jcmd $masterPid GC.class_histogram > class_histogram.txt"
+                                    environment {
+                                        OUTPUT_HEAPDUMP = "dump.hprof"
+                                        OUTPUT_HISTOGRAM = "class_histogram.txt"
+                                    }
+                                    steps{
+                                        script {
+                                            sh """
+                                            jcmd $masterPid GC.heap_dump filename=$OUTPUT_HEAPDUMP
+                                            jcmd $masterPid GC.class_histogram > $OUTPUT_HISTOGRAM
+                                            """
+                                        }
                                     }
                                 }
                             }
