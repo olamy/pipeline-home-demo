@@ -75,7 +75,7 @@ def call(mode) {
                                             script {
                                                 // jcmd $masterPid GC.heap_dump filename=$OUTPUT_HEAPDUMP > Permission issue
                                                 sh """
-                                                jmap -dump:format=b,file=$OUTPUT_HEAPDUMP -F $masterPid
+                                                jmap -dump:live,format=b,file=$OUTPUT_HEAPDUMP $masterPid
                                                 jcmd $masterPid GC.class_histogram > $OUTPUT_HISTOGRAM
                                                 """
                                             }
