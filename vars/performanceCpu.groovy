@@ -31,19 +31,14 @@ def call(mode) {
                         steps{
                             dir ("cpu"){
                                 sh """
-                                cat <<EOF >>VM_description.txt
-                                VM.version
-                                ===========
-                                $(jcmd $masterPid VM.version)
-                                EOF
+                                    output=VM_description.txt
+                                    echo '==========\nVM.version\n==========\n\n' >> $output
+                                    jcmd $masterPid VM.version >> $output
+                                    echo '==========\nVM.system_properties\n==========\n\n' >> $output
+                                    jcmd $masterPid VM.system_properties >> $output
+                                    echo '==========\nVM.flags\n==========\n\n' >> $output
+                                    jcmd $masterPid VM.flags >> $output
                                 """
-                                // sh "echo 'VM.version' > VM_description.txt"
-                                // sh "echo 'VM.version \n ==========' > VM_description.txt"
-                                // sh "jcmd $masterPid VM.version >> VM_description.txt"
-                                // sh "echo 'VM.system_properties \n ==========' >> VM_description.txt"
-                                // sh "jcmd $masterPid VM.system_properties >> VM_description.txt"
-                                // sh "echo 'VM.flags \n ==========' >> VM_description.txt"
-                                // sh "jcmd $masterPid VM.flags >> VM_description.txt"
                                 }
                             }
                         }
