@@ -81,6 +81,7 @@ def call(mode) {
                                         }
                                         writeFile file: "memory_collector.sh", text: data_script
                                         sh """
+                                        export JENKINS_JMAP_OUTPUT_DIR=\$(pwd)
                                         chmod +x memory_collector.sh
                                         bash memory_collector.sh $masterPid 1
                                         """
@@ -95,7 +96,7 @@ def call(mode) {
         post {
             // TODO: Include notication https://www.jenkins.io/doc/pipeline/tour/post/
             success {
-                zip zipFile: "CPU_Data-${timestamp}.zip", archive: true, dir: "performance"
+                zip zipFile: "Performance_mode-${mode}_${timestamp}.zip", archive: true, dir: "performance"
             }
         }
     }
