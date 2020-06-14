@@ -51,7 +51,7 @@ def call(mode) {
                     stage("JVM Performance"){
                         stages { 
                             stage("CPU") {
-                                // Ref: https://support.cloudbees.com/hc/en-us/articles/205199280
+                                // Ref: https://support.cloudbees.com/hc/en-us/articles/229370407
                                 when {
                                     environment name: 'MODE', value: '1'
                                 }
@@ -69,7 +69,7 @@ def call(mode) {
                                 }
                             }
                             stage("Memory") {
-                                // Ref: https://support.cloudbees.com/hc/en-us/articles/229370407
+                                // Ref: https://support.cloudbees.com/hc/en-us/articles/115001122568
                                 when {
                                     environment name: 'MODE', value: '2'
                                 }
