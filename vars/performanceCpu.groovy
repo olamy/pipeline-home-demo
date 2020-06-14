@@ -6,10 +6,14 @@ def call(mode) {
 
     def timestamp
     def masterPid
+    def data_script
 
     pipeline {
         agent {
             label "master"
+        }
+        options { // Increase Rotation with integration with External Storage
+            buildDiscarder(logRotator(numToKeepStr: "1", artifactNumToKeepStr: "1"))
         }
         environment {
             MODE = "${mode}"
@@ -88,11 +92,11 @@ def call(mode) {
                                 }
                                 steps {
                                     dir ("cpu"){
-                                        def cpu_script = libraryResource 'scripts/jenkinshangWithJstack.sh'
-                                        writeFile file: "cpu_script.sh", text: cpu_script
+                                        data_script = libraryResource 'scripts/jenkinshangWithJstack.sh'
+                                        writeFile file: "data_script.sh", text: data_script
                                         sh """
-                                        chmod +x cpu_script.sh
-                                        bash cpu_script.sh $masterPid
+                                        chmod +x data_script.sh
+                                        bash data_script.sh $masterPid
                                         """
                                     }
                                 }
