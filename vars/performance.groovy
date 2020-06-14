@@ -1,4 +1,4 @@
-// vars/performanceCpu.groovy
+// vars/performance.groovy
 
 import java.lang.management.ManagementFactory
 
@@ -32,6 +32,7 @@ def call(mode) {
             stage("Data Capture") {
                 stages {
                     stage("JVM General"){
+                        // Ref: https://docs.oracle.com/javase/8/docs/technotes/guides/troubleshoot/tooldescr006.html
                         environment {
                             OUTPUT = "VM_description.txt"
                         }
@@ -92,6 +93,7 @@ def call(mode) {
             }
         }
         post {
+            // TODO: Include notication https://www.jenkins.io/doc/pipeline/tour/post/
             success {
                 zip zipFile: "CPU_Data-${timestamp}.zip", archive: true, dir: "performance"
             }
