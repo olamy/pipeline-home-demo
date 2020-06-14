@@ -46,7 +46,7 @@ def call(mode) {
                             }
                         stage("VM Heap Dump"){
                             stages {
-                                stage("jenkinsjmap.sh") {
+                                stage("via script") {
                                     // Ref: https://support.cloudbees.com/hc/en-us/articles/115001122568
                                     when {
                                         environment name: 'MODE', value: '1'
@@ -62,7 +62,7 @@ def call(mode) {
                                         }
                                     }
                                 }
-                                stage("jmap") {
+                                stage("via jdk") {
                                     // Ref: https://support.cloudbees.com/hc/en-us/articles/222167128
                                     when {
                                         environment name: 'MODE', value: '2'

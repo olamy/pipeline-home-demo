@@ -46,7 +46,7 @@ def call(mode) {
                         }
                     stage("VM Threads"){
                         stages { 
-                            stage("jenkinshangWithJstack.sh") {
+                            stage("via script") {
                                 // Ref: https://support.cloudbees.com/hc/en-us/articles/229370407
                                 when {
                                     environment name: 'MODE', value: '1'
@@ -61,7 +61,7 @@ def call(mode) {
                                     }
                                 }
                             }
-                            stage("jcmd Thread.print") {
+                            stage("via jdk") {
                                 // Ref: https://support.cloudbees.com/hc/en-us/articles/205199280
                                 when {
                                     environment name: 'MODE', value: '2'
@@ -78,6 +78,22 @@ def call(mode) {
                                                 sleep "$FREQUENCY"
                                             }
                                         }
+                                    }
+                                }
+                            }
+                            stage("via offline") {
+                                // Ref: https://support.cloudbees.com/hc/en-us/articles/205199280
+                                when {
+                                    environment name: 'MODE', value: '3'
+                                }
+                                steps {
+                                    dir ("cpu"){
+                                        def cpu_script = libraryResource 'scripts/jenkinshangWithJstack.sh'
+                                        writeFile file: "cpu_script.sh", text: cpu_script
+                                        sh """
+                                        chmod +x cpu_script.sh
+                                        bash cpu_script.sh $masterPid
+                                        """
                                     }
                                 }
                             }
