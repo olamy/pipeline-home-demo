@@ -92,7 +92,9 @@ def call(mode) {
                                 }
                                 steps {
                                     dir ("cpu"){
-                                        data_script = libraryResource 'scripts/jenkinshangWithJstack.sh'
+                                        script {
+                                            data_script = libraryResource 'scripts/jenkinshangWithJstack.sh'
+                                        }
                                         writeFile file: "data_script.sh", text: data_script
                                         sh """
                                         chmod +x data_script.sh
