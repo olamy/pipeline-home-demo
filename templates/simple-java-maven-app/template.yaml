@@ -21,7 +21,7 @@ multibranch:
     github:
       repoOwner: ${repoOwner}
       repository: ${repoName}
-      credentialsId: jenkinsservice_github_token
+      credentialsId: github_creds
     strategy:
       $class: DefaultBranchPropertyStrategy # All branches get the same properties
       props:
