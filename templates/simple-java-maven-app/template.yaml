@@ -14,14 +14,13 @@ parameters:
   - name: github_creds
     displayName: GitHub Credentials ID
     type: credentials
-    defaultValue: github-creds-example
     
 multibranch:
   branchSource:
     github:
       repoOwner: ${repoOwner}
       repository: ${repoName}
-      credentialsId: github_creds
+      credentialsId: ${github_creds}
     strategy:
       $class: DefaultBranchPropertyStrategy # All branches get the same properties
       props:
