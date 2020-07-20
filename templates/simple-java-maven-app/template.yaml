@@ -1,4 +1,5 @@
 version: 1
+templateType: MULTIBRANCH
 type: pipeline-template
 
 name: Java Maven App Pipeline Job
